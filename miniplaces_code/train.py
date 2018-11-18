@@ -11,11 +11,28 @@ import dataset
 from models.AlexNet import *
 from models.ResNet import *
 
+def compute_err(data_loader, model, device):
+    total = 0; top1_err = 0; top5_err = 0;
+    for batch_num, (inputs, labels) in enumerate(data_loader, 1):
+        inputs = inputs.to(device)
+        labels = labels.to(device).view(-1,1)
+        outputs = model(inputs)
+        top1 = outputs.topk(1)[1]
+        top5 = outputs.topk(5)[1]
+
+        top1_err += (top1 != labels).sum()
+        top5_err += labels.size()[0] - (top5 == labels).sum()
+
+        total += labels.size()[0]
+    top1_err_score = top1_err.float()/total
+    top5_err_score = top5_err.float()/total
+    return top1_err_score, top5_err_score
+
 def run():
     # Parameters
     num_epochs = 10
     output_period = 100
-    batch_size = 100
+    batch_size = 20
 
     # setup the device for running
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -29,6 +46,7 @@ def run():
     # TODO: optimizer is currently unoptimized
     # there's a lot of room for improvement/different optimizers
     optimizer = optim.SGD(model.parameters(), lr=1e-3)
+
 
     epoch = 1
     while epoch <= num_epochs:
@@ -63,6 +81,13 @@ def run():
 
         # TODO: Calculate classification error and Top-5 Error
         # on training and validation datasets here
+        model.eval()
+        print("Computing error on whole dataset...")
+        train_top1_err, train_top5_err = compute_err(train_loader, model, device)
+        val_top1_err, val_top5_err = compute_err(val_loader, model, device)
+        print("[{epoch}:train] top1: {top1} top5: {top5}.".format(epoch=epoch, top1=train_top1_err, top5=train_top5_err))
+        print("[{epoch}:validate] top1: {top1} top5: {top5}.".format(epoch=epoch, top1=val_top1_err, top5=val_top5_err))
+        model.train()
 
         gc.collect()
         epoch += 1

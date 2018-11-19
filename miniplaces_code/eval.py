@@ -16,7 +16,8 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 def run():
     # model_name = "baseline"
-    model_name = "baseline_bs_20_lr_1e-2_ep_8"
+    model_name = "baseline_bs_20_lr_1e-2_adagrad"
+    # model_name = "baseline_bs_20_lr_1e-2_ep_8"
     # model_name = "baseline_bs_20_lr_1e-2_ep_7"
     # Parameters
     batch_size = 100

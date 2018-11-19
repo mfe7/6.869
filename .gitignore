@@ -2,3 +2,10 @@ data
 *.pyc
 model.*
 results.txt
+
+samples_*/
+pretrained*/
+checkpoints_cyclegan
+__pycache__
+*.zip
+emojis

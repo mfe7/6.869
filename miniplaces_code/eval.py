@@ -15,20 +15,23 @@ from models.ResNet import *
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 def run():
+    # model_name = "baseline"
+    model_name = "baseline_bs_20_lr_1e-2_ep_8"
+    # model_name = "baseline_bs_20_lr_1e-2_ep_7"
     # Parameters
     batch_size = 100
 
     # setup the device for running
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model = resnet_18()
-    model.load_state_dict(torch.load("models/model.10"))
+    model.load_state_dict(torch.load("models/good_models/{model_name}".format(model_name=model_name)))
     model = model.to(device)
 
     test_loader = dataset.get_test_loader(batch_size)
     num_test_batches = len(test_loader)
 
     model.eval()
-    eval_filename = "{dir}/results.txt".format(dir=dir_path)
+    eval_filename = "{dir}/results-{model_name}.txt".format(dir=dir_path, model_name=model_name)
     with torch.no_grad():
         with open(eval_filename, "w") as file:
             img_id = 0

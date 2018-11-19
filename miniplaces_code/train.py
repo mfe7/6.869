@@ -34,7 +34,10 @@ def run():
     # Parameters
     num_epochs = 10
     output_period = 100
+
     batch_size = 20
+    learning_rate = 1e-2
+    weight_decay = 1e-1
 
     # setup the device for running
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -47,7 +50,7 @@ def run():
     criterion = nn.CrossEntropyLoss().to(device)
     # TODO: optimizer is currently unoptimized
     # there's a lot of room for improvement/different optimizers
-    optimizer = optim.SGD(model.parameters(), lr=1e-3)
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
 
     epoch = 1
@@ -92,8 +95,8 @@ def run():
             print("Computing error on whole dataset...")
             train_top1_err, train_top5_err = compute_err(train_loader_eval, model, device)
             val_top1_err, val_top5_err = compute_err(val_loader_eval, model, device)
-            print("[{epoch}:train] top1: {top1} top5: {top5}.".format(epoch=epoch, top1=train_top1_err, top5=train_top5_err))
-            print("[{epoch}:validate] top1: {top1} top5: {top5}.".format(epoch=epoch, top1=val_top1_err, top5=val_top5_err))
+            print("[{epoch}:train] top1: {top1:.3f} top5: {top5:.3f}.".format(epoch=epoch, top1=train_top1_err, top5=train_top5_err))
+            print("[{epoch}:validate] top1: {top1:.3f} top5: {top5:.3f}.".format(epoch=epoch, top1=val_top1_err, top5=val_top5_err))
             model.train()
 
         gc.collect()

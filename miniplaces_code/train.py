@@ -37,7 +37,7 @@ def run():
 
     batch_size = 20
     learning_rate = 1e-2
-    weight_decay = 1e-1
+    weight_decay = 0
 
     # setup the device for running
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -50,7 +50,8 @@ def run():
     criterion = nn.CrossEntropyLoss().to(device)
     # TODO: optimizer is currently unoptimized
     # there's a lot of room for improvement/different optimizers
-    optimizer = optim.SGD(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    # optimizer = optim.SGD(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    optimizer = optim.Adagrad(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
 
     epoch = 1

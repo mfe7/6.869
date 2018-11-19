@@ -120,10 +120,10 @@ def load_checkpoint(opts):
     D_X = DCDiscriminator(conv_dim=opts.d_conv_dim)
     D_Y = DCDiscriminator(conv_dim=opts.d_conv_dim)
 
-    G_XtoY.load_state_dict(torch.load(G_XtoY_path, map_location=lambda storage, loc: storage))
-    G_YtoX.load_state_dict(torch.load(G_YtoX_path, map_location=lambda storage, loc: storage))
-    D_X.load_state_dict(torch.load(D_X_path, map_location=lambda storage, loc: storage))
-    D_Y.load_state_dict(torch.load(D_Y_path, map_location=lambda storage, loc: storage))
+    G_XtoY.load_state_dict(torch.load(G_XtoY_path, map_location=lambda storage, loc: storage), strict=False)
+    G_YtoX.load_state_dict(torch.load(G_YtoX_path, map_location=lambda storage, loc: storage), strict=False)
+    D_X.load_state_dict(torch.load(D_X_path, map_location=lambda storage, loc: storage), strict=False)
+    D_Y.load_state_dict(torch.load(D_Y_path, map_location=lambda storage, loc: storage), strict=False)
 
     if torch.cuda.is_available():
         G_XtoY.cuda()

@@ -64,7 +64,7 @@ class CycleGenerator(nn.Module):
         ###########################################
 
         # 1. Define the encoder part of the generator (that extracts features from the input image)
-        self.conv1 = conv(in_channels=3, out_channels=conv_dim*2, kernel_size=4)
+        self.conv1 = conv(in_channels=3, out_channels=conv_dim, kernel_size=4)
         self.conv2 = conv(in_channels=conv_dim, out_channels=conv_dim*2, kernel_size=4)
 
         # 2. Define the transformation part of the generator

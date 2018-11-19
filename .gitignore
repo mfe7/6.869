@@ -1,3 +1,4 @@
 data
 *.pyc
 model.*
+results.txt

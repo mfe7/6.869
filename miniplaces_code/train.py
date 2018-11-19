@@ -81,13 +81,16 @@ def run():
 
         # TODO: Calculate classification error and Top-5 Error
         # on training and validation datasets here
-        model.eval()
-        print("Computing error on whole dataset...")
-        train_top1_err, train_top5_err = compute_err(train_loader, model, device)
-        val_top1_err, val_top5_err = compute_err(val_loader, model, device)
-        print("[{epoch}:train] top1: {top1} top5: {top5}.".format(epoch=epoch, top1=train_top1_err, top5=train_top5_err))
-        print("[{epoch}:validate] top1: {top1} top5: {top5}.".format(epoch=epoch, top1=val_top1_err, top5=val_top5_err))
-        model.train()
+        with torch.no_grad():
+            batch_size_eval = 100
+            train_loader_eval, val_loader_eval = dataset.get_data_loaders(batch_size_eval)
+            model.eval()
+            print("Computing error on whole dataset...")
+            train_top1_err, train_top5_err = compute_err(train_loader_eval, model, device)
+            val_top1_err, val_top5_err = compute_err(val_loader_eval, model, device)
+            print("[{epoch}:train] top1: {top1} top5: {top5}.".format(epoch=epoch, top1=train_top1_err, top5=train_top5_err))
+            print("[{epoch}:validate] top1: {top1} top5: {top5}.".format(epoch=epoch, top1=val_top1_err, top5=val_top5_err))
+            model.train()
 
         gc.collect()
         epoch += 1

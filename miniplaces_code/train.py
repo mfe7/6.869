@@ -1,5 +1,6 @@
 import gc
 import sys
+import time
 from torch.autograd import Variable
 import torch
 import torch.nn as nn
@@ -29,6 +30,7 @@ def compute_err(data_loader, model, device):
     return top1_err_score, top5_err_score
 
 def run():
+    t_start = time.time()
     # Parameters
     num_epochs = 10
     output_period = 100
@@ -50,6 +52,7 @@ def run():
 
     epoch = 1
     while epoch <= num_epochs:
+        t_start_epoch = time.time()
         running_loss = 0.0
         for param_group in optimizer.param_groups:
             print('Current learning rate: ' + str(param_group['lr']))
@@ -78,6 +81,7 @@ def run():
         gc.collect()
         # save after every epoch
         torch.save(model.state_dict(), "models/model.%d" % epoch)
+        t_trained_epoch = time.time()
 
         # TODO: Calculate classification error and Top-5 Error
         # on training and validation datasets here
@@ -94,6 +98,15 @@ def run():
 
         gc.collect()
         epoch += 1
+        
+        t_done_epoch = time.time()
+        t_train_epoch = t_trained_epoch - t_start_epoch
+        t_eval_epoch = t_done_epoch - t_trained_epoch
+        t_total_epoch = t_done_epoch - t_start_epoch
+        t_total_so_far = t_done_epoch - t_start
+        print("Epoch took {:6.1f} sec total ({:6.1f} to train, {:6.1f} to eval)".format(t_total_epoch, t_train_epoch, t_eval_epoch))
+        print("Taken {:10.1f} total so far.".format(t_total_so_far))
+
 
 print('Starting training')
 run()
